@@ -1,0 +1,33 @@
+---
+- name: install git packages
+  package:
+    name: "git,tig,git-email"
+    state: present
+  become: yes
+
+- name: install packages for peresonal use via pip
+  pip:
+    name: 'git-review'
+  become: yes
+
+- name: check my_settings_dir exists
+  delegate_to: localhost
+  stat:
+    path: "{{ my_settings_dir }}"
+  when: my_settings_dir is defined
+  register: myset
+
+- name: copy git config to home directory
+  copy:
+    src: "{{ my_settings_dir }}/.gitconfig"
+    dest: ~/.gitconfig
+  when:
+    - my_settings_dir is defined
+    - myset.stat.isdir is defined
+    - myset.stat.isdir
+
+- name: install private key for gerrit
+  copy:
+    src: id_rsa
+    dest: ~/.ssh/id_rsa mode=600
+...

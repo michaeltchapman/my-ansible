@@ -1,0 +1,16 @@
+---
+- name: check my_settings_dir exists on local machine
+  stat:
+    path: "{{ my_settings_dir }}"
+  register: myset
+  when: my_settings_dir is defined
+
+- name: copy bashrc to home directory
+  copy:
+    src: "{{ my_settings_dir }}/.bashrc"
+    dest: "{{ ansible_env.HOME }}/.bashrc"
+  when:
+    - my_settings_dir is defined
+    - myset.stat.isdir is defined
+    - myset.stat.isdir
+...
