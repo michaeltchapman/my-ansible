@@ -1,0 +1,12 @@
+---
+- name: install packages for peresonal use via pip
+  pip:
+    name: 'flake8,pep8,"ipython<5",pylint'
+  become: yes
+
+- name: install ipdb specific version
+  pip:
+    name: ipdb
+    version: 0.10.2
+  become: yes
+...
