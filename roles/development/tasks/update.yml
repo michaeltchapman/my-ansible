@@ -5,9 +5,10 @@
     update_cache: yes
     state: latest
   become: yes
+  register: updated
   when: ansible_distribution == 'CentOS'
 
-- name: install aptitude
+- name: install aptitude (Ubuntu)
   package:
     name: "aptitude"
     state: present
@@ -20,20 +21,23 @@
     upgrade: safe
     state: latest
   become: yes
+  register: updated
   when: ansible_distribution == 'Ubuntu'
 
-- name: reboot host
-  command: sleep 2 && /sbin/reboot
-  async: 1
-  poll: 0
-  become: yes
+- block:
+    - name: reboot host
+      command: sleep 2 && /sbin/reboot
+      async: 1
+      poll: 0
+      become: yes
 
-- name: wait for host to be ready
-  local_action: wait_for
-  args:
-    host: "{{ ansible_host }}"
-    port: "{{ ansible_port | default(22) }}"
-    state: started
-    delay: 60
-    timeout: 180
+    - name: wait for host to be ready
+      local_action: wait_for
+      args:
+        host: "{{ ansible_host }}"
+        port: "{{ ansible_port | default(22) }}"
+        state: started
+        delay: 60
+        timeout: 180
+  when: updated.changed
 ...
