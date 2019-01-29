@@ -1,8 +1,0 @@
----
-# vars file for vqfx-controller-bm
-package_dependencies:
-  - vagrant
-  - python-pip
-pip_dependencies:
-  - virtualbmc
-

@@ -1,3 +1,0 @@
----
-- name: prepare hypervisor
-  include_tasks: prep-hypervisor.yml
