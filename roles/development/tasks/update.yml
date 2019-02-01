@@ -5,7 +5,7 @@
     update_cache: yes
     state: latest
   become: yes
-  register: updated
+  register: updated_centos
   when: ansible_distribution == 'CentOS'
 
 - name: install aptitude (Ubuntu)
@@ -21,7 +21,7 @@
     upgrade: safe
     state: latest
   become: yes
-  register: updated
+  register: updated_ubuntu
   when: ansible_distribution == 'Ubuntu'
 
 - block:
@@ -39,5 +39,5 @@
         state: started
         delay: 60
         timeout: 180
-  when: updated.changed
+  when: updated_centos.changed or updated_ubuntu.changed
 ...

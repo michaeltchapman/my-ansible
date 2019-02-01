@@ -1,8 +1,8 @@
 ---
 - name: install vim for personal use via yum
   yum:
-    name: "vim-common,vim-minimal,vim-enhanced,vim-filesystem,"
-    state: present
+    name: vim-enhanced
+    state: latest
   become: yes
   when: ansible_distribution == 'CentOS'
 

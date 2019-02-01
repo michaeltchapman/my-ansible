@@ -1,2 +1,31 @@
 ---
-# tasks file for devstack-all-in-one
+- include_tasks: install_python3.yml
+
+- name: clone devstack repo
+  git:
+    repo: git://github.com/openstack-dev/devstack.git
+    dest: "{{ devstack_dir }}"
+
+- name: "WORKAROUND: Install virtualenv 16.2.0, the latest doesn't work"
+  pip:
+    name: virtualenv==16.2.0
+    state: present
+  become: yes
+
+- name: flush iptables
+  iptables: flush=true
+  become: yes
+
+- set_fact:
+    controller_host_ip: "{{ hostvars.controller.ansible_default_ipv4.address }}"
+
+- name: create local.conf for controller
+  template:
+    src: local.conf.j2
+    dest: "{{ devstack_dir }}/local.conf"
+    mode: 0644
+
+- name: stack the stack
+  command: ./stack.sh
+  args:
+    chdir: "{{ devstack_dir }}"
