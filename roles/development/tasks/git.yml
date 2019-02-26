@@ -14,9 +14,17 @@
   copy:
     src: "{{ my_settings_dir }}/.gitconfig"
     dest: ~/.gitconfig
+  when:
+    - my_settings_dir is defined
+    - myset.stat.isdir is defined
+    - myset.stat.isdir
 
 - name: install private key for gerrit
   copy:
     src: id_rsa
     dest: ~/.ssh/id_rsa mode=600
+  when:
+    - my_settings_dir is defined
+    - myset.stat.isdir is defined
+    - myset.stat.isdir
 ...

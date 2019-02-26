@@ -20,7 +20,3 @@
     - include_tasks: python.yml
     - include_tasks: vim.yml
   ignore_errors: true
-  when:
-    - my_settings_dir is defined
-    - myset.stat.isdir is defined
-    - myset.stat.isdir
