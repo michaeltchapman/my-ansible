@@ -22,9 +22,11 @@
   copy:
     src: "{{ my_settings_dir }}/.vimrc"
     dest: "{{ ansible_env.HOME }}/.vimrc"
+  when: my_settings_dir is defined
 
 - name: copy .vim directory to home directory
   copy:
     src: "{{ my_settings_dir }}/.vim"
     dest: "{{ ansible_env.HOME }}"
+  when: my_settings_dir is defined
 ...

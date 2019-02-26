@@ -13,6 +13,14 @@
   register: myset
   when: my_settings_dir is defined
 
+- name: fail if a settings dir was provided that is not valid
+  fail:
+    msg: "{{ my_settings_dir }} is not a valid settings directory"
+  when:
+    - my_settings_dir is defined
+    - myset.stat.isdir is defined
+    - not myset.stat.isdir
+
 - block:
     - include_tasks: install_pip.yml
     - include_tasks: bash.yml
@@ -20,7 +28,3 @@
     - include_tasks: python.yml
     - include_tasks: vim.yml
   ignore_errors: true
-  when:
-    - my_settings_dir is defined
-    - myset.stat.isdir is defined
-    - myset.stat.isdir
