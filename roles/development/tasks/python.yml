@@ -9,4 +9,7 @@
     name: ipdb
     version: 0.10.2
   become: yes
-...
+
+- name: install python 3 from source
+  include_tasks: install_python3.yml
+  when: install_python3
