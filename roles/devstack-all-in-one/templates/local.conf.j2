@@ -1,6 +1,9 @@
-
 [[local|localrc]]
+
+enable_plugin networking-ansible git://git.openstack.org/openstack/networking-ansible
+
 enable_plugin ironic git://git.openstack.org/openstack/ironic
+
 disable_all_services
 enable_service g-reg
 enable_service rabbit
@@ -39,8 +42,15 @@ disable_service cinder
 disable_service n-sch
 enable_service dstat
 
-# networking-ansible                                                            
-enable_plugin networking-ansible git://git.openstack.org/openstack/networking-ansible
+HOST_IP={{ controller_host_ip }}
+
+#PASSWORDS
+PASSWORD={{ service_password }}
+MYSQL_PASSWORD=$PASSWORD
+SERVICE_TOKEN=$PASSWORD
+SERVICE_PASSWORD=$PASSWORD
+ADMIN_PASSWORD=$PASSWORD
+RABBIT_PASSWORD=$PASSWORD
 
 #BUILD_TIMEOUT=720
 CINDER_PERIODIC_INTERVAL=10
@@ -75,9 +85,6 @@ LOG_COLOR=False
 #NETWORK_GATEWAY=10.1.0.1
 NOVA_VNC_ENABLED=True
 NOVNC_FROM_PACKAGE=True
-OVERRIDE_PUBLIC_BRIDGE_MTU=1400
-PUBLIC_BRIDGE_MTU=1450
-#PUBLIC_NETWORK_GATEWAY=172.24.5.1
 Q_AGENT=openvswitch
 Q_ML2_TENANT_NETWORK_TYPE=vxlan
 #SERVICE_HOST=10.209.1.30
@@ -94,19 +101,6 @@ VNCSERVER_LISTEN=0.0.0.0
 VNCSERVER_PROXYCLIENT_ADDRESS=$HOST_IP
 #LIBS_FROM_GIT=nova,ironic-tempest-plugin,ironic-python-agent,ironic,neutron,tempest,swift,virtualbmc,placement,cinder,glance,keystone,devstack,requirements,pyghmi
 
-HOST_IP={{ controller_host_ip }}
-
-#PASSWORDS
-PASSWORD={{ service_password }}
-MYSQL_PASSWORD=$PASSWORD
-SERVICE_TOKEN=$PASSWORD
-SERVICE_PASSWORD=$PASSWORD
-ADMIN_PASSWORD=$PASSWORD
-RABBIT_PASSWORD=$PASSWORD
-
 [[test-config|$TEMPEST_CONFIG]]
 [compute]
 min_compute_nodes = 1
-[[post-config|$NEUTRON_CONF]]
-[DEFAULT]
-global_physnet_mtu = 1450
