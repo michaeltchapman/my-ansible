@@ -1,0 +1,27 @@
+# Ironic devstack will create virtual baremetals and plug them into an ovs
+# bridge called brbm. We will instead plug them into their own separate
+# linux bridges, and connect each bridge to an interface that has an
+# underlying UDP patch to a virtual appliance
+#
+- name: add virtualbaremetal bridges
+  command: "brctl addbr {{ item }}"
+  with_items:
+    - vbm0
+    - vbm1
+  become: true
+
+- name: add virtualbaremetal veth pairs to bridges
+  command: "brctl addif vbm{{ item }} ovs-node-{{ item }}i1"
+  with_items:
+    - "0"
+    - "1"
+  become: true
+
+- name: remove ovs ports
+  command: "ovs-vsctl del-port ovs-node-{{ item }}"
+  with_items:
+    - "0i1"
+    - "0i2"
+    - "1i1"
+    - "1i2"
+  become: true
