@@ -1,7 +1,7 @@
 ---
 - name: clone devstack repo
   git:
-    repo: git://github.com/openstack-dev/devstack.git
+    repo: https://opendev.org/openstack-dev/devstack
     dest: "{{ devstack_dir }}"
 
 - name: "WORKAROUND: Install virtualenv 16.2.0, the latest doesn't work"
