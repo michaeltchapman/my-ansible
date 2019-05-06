@@ -1,0 +1,15 @@
+- name: install bridge utils
+  package:
+    name: "bridge-utils"
+    state: present
+  become: true
+
+- name: create connection test script
+  template:
+    src: test_connection.sh.j2
+    dest: "/root/test_connection.sh"
+  become: true
+
+- name: run connection test script
+  shell: "bash -x /root/test_connection.sh"
+  become: true
