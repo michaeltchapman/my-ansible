@@ -102,8 +102,14 @@ VNCSERVER_LISTEN=0.0.0.0
 VNCSERVER_PROXYCLIENT_ADDRESS=$HOST_IP
 #LIBS_FROM_GIT=nova,ironic-tempest-plugin,ironic-python-agent,ironic,neutron,tempest,swift,virtualbmc,placement,cinder,glance,keystone,devstack,requirements,pyghmi
 
-Q_USE_PROVIDER_NETWORKING=Fales
-Q_USE_PROVIDERNET_FOR_PUBLIC=Fales
+PHYSICAL_NETWORK=provisioning
+IRONIC_PROVISION_NETWORK_NAME=provisioning
+IRONIC_PROVISION_PROVIDER_NETWORK_TYPE=flat
+
+NEUTRON_CREATE_INITIAL_NETWORKS=False
+
+Q_USE_PROVIDER_NETWORKING=False
+Q_USE_PROVIDERNET_FOR_PUBLIC=False
 
 [[test-config|$TEMPEST_CONFIG]]
 [compute]
