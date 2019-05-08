@@ -105,6 +105,8 @@ VNCSERVER_PROXYCLIENT_ADDRESS=$HOST_IP
 PHYSICAL_NETWORK=provisioning
 IRONIC_PROVISION_NETWORK_NAME=provisioning
 IRONIC_PROVISION_PROVIDER_NETWORK_TYPE=flat
+# after devstack completes, connect this to eth1
+OVS_PHYSICAL_BRIDGE=br-prov
 
 NEUTRON_CREATE_INITIAL_NETWORKS=False
 
@@ -117,7 +119,7 @@ min_compute_nodes = 1
 
 [[post-config|/$Q_PLUGIN_CONF_FILE]]
 [ml2_type_vlan]
-network_vlan_ranges = datacentre:500:525,tenant:300:399
+network_vlan_ranges = tenant:500:525
 [[post-config|/$Q_PLUGIN_CONF_FILE]]
 [ml2_type_flat]
 flat_networks = datacentre,provisioning
