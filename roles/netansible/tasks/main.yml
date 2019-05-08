@@ -34,6 +34,10 @@
 - name: run clean portscript
   shell: "bash {{ devstack_dir }}/clean_ports.sh"
 
+- name: connect eth1 (controller provisioning) to its appliance port
+  command: "ovs-vsctl add-port br-prov eth1"
+  become: true
+
 - name: find provisioning network
   shell: "{{ openrc_admin }} && openstack network list | grep provisioning"
   ignore_errors: true
