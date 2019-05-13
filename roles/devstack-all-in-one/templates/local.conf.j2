@@ -104,7 +104,7 @@ VNCSERVER_PROXYCLIENT_ADDRESS=$HOST_IP
 
 PHYSICAL_NETWORK=provisioning
 IRONIC_PROVISION_NETWORK_NAME=provisioning
-IRONIC_PROVISION_PROVIDER_NETWORK_TYPE=flat
+IRONIC_PROVISION_PROVIDER_NETWORK_TYPE=vlan
 # after devstack completes, connect this to eth1
 OVS_PHYSICAL_BRIDGE=br-prov
 
@@ -119,13 +119,25 @@ min_compute_nodes = 1
 
 [[post-config|/$Q_PLUGIN_CONF_FILE]]
 [ml2_type_vlan]
-network_vlan_ranges = tenant:500:525
+network_vlan_ranges = tenant:500:525,provisioning:1
 [[post-config|/$Q_PLUGIN_CONF_FILE]]
 [ml2_type_flat]
-flat_networks = datacentre,provisioning
+flat_networks = datacentre
 [[post-config|/$Q_PLUGIN_CONF_FILE]]
 [ml2]
 mechanism_drivers = openvswitch,ansible
 [[post-config|/$Q_PLUGIN_CONF_FILE]]
 [ml2]
 tenant_network_types = vlan
+[[post-config|/$Q_PLUGIN_CONF_FILE]]
+[ansible:testhost]
+ansible_network_os={{ appliance_os }}
+[[post-config|/$Q_PLUGIN_CONF_FILE]]
+[ansible:testhost]
+ansible_host={{ appliance_ip }}
+[[post-config|/$Q_PLUGIN_CONF_FILE]]
+[ansible:testhost]
+ansible_user={{ appliance_user }}
+[[post-config|/$Q_PLUGIN_CONF_FILE]]
+[ansible:testhost]
+ansible_ssh_pass={{ appliance_pass }}
