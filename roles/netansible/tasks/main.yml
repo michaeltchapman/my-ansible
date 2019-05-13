@@ -26,6 +26,13 @@
     - "1"
   become: true
 
+- name: add virtualbaremetal bridges to ethernet interfaces
+  command: "brctl addif vbm{{ item }} eth{{ item + 2 }}"
+  with_items:
+    - "0"
+    - "1"
+  become: true
+
 - name: create clean ports script
   template:
     src: clean_ports.sh.j2
