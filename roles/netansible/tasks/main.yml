@@ -27,7 +27,7 @@
   become: true
 
 - name: add virtualbaremetal bridges to ethernet interfaces
-  command: "brctl addif vbm{{ item }} eth{{ item + 2 }}"
+  command: "brctl addif vbm{{ item }} eth{{ item | int + 2 }}"
   with_items:
     - "0"
     - "1"
