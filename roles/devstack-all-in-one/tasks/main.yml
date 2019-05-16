@@ -23,9 +23,54 @@
     dest: "{{ devstack_dir }}/local.conf"
     mode: 0644
 
+- name: install iptables
+  yum:
+    name: iptables-services
+  become: true
+
 - name: install libvirt
   yum:
     name: libvirt
+  become: true
+
+- name: stop firewalld
+  service:
+    name: firewalld
+    state: stopped
+  become: true
+
+- name: start iptables
+  service:
+    name: iptables
+    state: stopped
+  become: true
+
+- name: start libvirtd
+  service:
+    name: libvirtd
+    state: started
+  become: true
+
+- name: destroy the libvirt default network
+  command: virsh net-destroy default
+  become: true
+
+- name: undefine the libvirt default network
+  command: virsh net-undefine default
+  become: true
+
+- name: flush the libvirt/other rules out of iptables
+  command: iptables --flush
+  become: true
+
+- name: save the flushed rules
+  command: service iptables save
+  become: true
+
+- name: restart libvirtd
+  service:
+    name: libvirtd
+    state: restarted
   become: true
 
 - name: add the vagrant user to the libvirt group
