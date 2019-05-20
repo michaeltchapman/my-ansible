@@ -33,6 +33,13 @@
     - "1"
   become: true
 
+- name: set bridges up
+  command: "ip link set {{ item }} up"
+  with_items:
+    - vbm0
+    - vbm1
+  become: true
+
 - name: create clean ports script
   template:
     src: clean_ports.sh.j2
