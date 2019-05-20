@@ -59,8 +59,8 @@
   command: virsh net-undefine default
   become: true
 
-- name: flush the libvirt/other rules out of iptables
-  command: iptables --flush
+- name: flush the libvirt/other REJECT rules out of iptables
+  shell: iptables-save | grep -v REJECT | iptables-restore
   become: true
 
 - name: save the flushed rules
