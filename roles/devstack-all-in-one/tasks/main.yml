@@ -14,8 +14,37 @@
   iptables: flush=true
   become: yes
 
+- name: install bridge-utils
+  yum:
+    name: bridge-utils
+  become: true
+
 - set_fact:
     controller_host_ip: "{{ hostvars.controller.ansible_default_ipv4.address }}"
+
+- name: create iface-to-bridge script
+  template:
+    src: setifacetobridge.sh.j2
+    dest: "/root/setifacetobridge.sh"
+    mode: 0774
+  become: true
+
+- name: move eth0 to br-eth0
+  shell: "bash -x /root/setifacetobridge.sh"
+  become: true
+
+- name: install arp-scan
+  yum:
+    name: arp-scan
+  become: true
+
+- name: find the appliance ip
+  shell: "arp-scan 192.168.121.0/24 | grep 52:54:00:ea:92:ca | awk '{print $1}'"
+  register: _appliance_ip
+  become: true
+
+- set_fact:
+    appliance_ip: "{{ _appliance_ip.stdout }}"
 
 - name: create local.conf for controller
   template:

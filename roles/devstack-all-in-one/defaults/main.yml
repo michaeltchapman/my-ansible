@@ -10,6 +10,6 @@ python3:
   version: 3.5
 
 appliance_os: junos
-appliance_ip: 192.168.121.19
+appliance_mac: "52:54:00:ea:92:ca"
 appliance_user: root
 appliance_pass: Juniper
