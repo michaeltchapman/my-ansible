@@ -378,9 +378,13 @@
       - delete interfaces xe-0/0/71:1
       - delete interfaces xe-0/0/71:2
       - delete interfaces xe-0/0/71:3
-      - set interfaces interface-range ctlcmp member-range xe-0/0/0 to xe-0/0/2
-      - set interfaces interface-range ctlcmp unit 0 family ethernet-switching interface-mode trunk
-      - set interfaces interface-range ctlcmp native-vlan-id 1
-      - set interfaces interface-range ctlcmp unit 0 family ethernet-switching vlan members default
+
+# put the provisioning network port on the controller in trunk mode
+      - set interface xe-0/0/0 unit 0 family ethernet-switching interface-mode trunk
+# The segmentation id for the provisioning network is set in devstack local.conf to 2
+      - set interface xe-0/0/0 unit 0 family ethernet-switching vlan members 2
+# put virtual baremetal ports on vlan 2 in access mode
+      - set interface xe-0/0/1 unit 0 family ethernet-switching interface-mode access
+      - set interface xe-0/0/2 unit 0 family ethernet-switching interface-mode access
       - commit
   connection: network_cli
