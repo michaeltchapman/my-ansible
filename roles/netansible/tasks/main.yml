@@ -185,6 +185,18 @@
     - "node-0"
     - "node-1"
 
+- name: add veth pair for eth0 to br-prov
+  command: ip link add veth0 type veth peer name veth1
+  become: true
+
+- name: connect veth pair to eth0 bridge
+  command: brctl addif br-eth0 veth0
+  become: true
+
+- name: connect veth pair to br-prov ovsbridge
+  command: ovs-vsctl add-port br-prov veth1
+  become: true
+
 - name: install crudini
   yum:
     name: crudini
