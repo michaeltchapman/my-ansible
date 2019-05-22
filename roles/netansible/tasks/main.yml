@@ -175,7 +175,6 @@
   shell: "{{ openrc_admin }}  && openstack flavor create --ram 1024 --disk 20 --vcpus 1 virtual"
   when: virtual_flavor.rc != 0
 
-
 - name: set virtual flavor to baremetal false
   shell: "{{ openrc_admin }}  && openstack flavor set virtual --property baremetal=\"false\""
   when: virtual_flavor.rc != 0
@@ -185,3 +184,33 @@
   with_items:
     - "node-0"
     - "node-1"
+
+- name: install crudini
+  yum:
+    name: crudini
+  become: true
+
+- name: enable automatic cleaning in ironic
+  command: crudini --set /etc/ironic/ironic.conf conductor automated_clean True
+  become: true
+
+- name: restart ironic conductor
+  service:
+    name: devstack@ir-cond
+    state: restarted
+  become: true
+
+- name: restart ironic api
+  service:
+    name: devstack@ir-api
+    state: restarted
+  become: true
+
+- name: clean baremetal
+  include: clean_node.yml nodename={{item}}
+  with_items:
+    - "node-0"
+    - "node-1"
+
+#- name: boot server
+#  shell: "{{ openrc_admin }} && openstack server create --image cirros-0.4.0-x86_64-uec --flavor baremetal --nic net-id=$(openstack network show tenant-net -f value -c id) instance1"

@@ -30,16 +30,3 @@
   shell: "{{ openrc_admin }} && openstack baremetal port create {{ ironic_bm_mac.stdout }} --node {{ ironic_bm_uuid.stdout }} --local-link-connection switch_id=00:00:00:00:00:00 --local-link-connection switch_info=testhost --local-link-connection port_id={{ node_port_map[nodename]}}"
   become: true
   when: ironic_bm_port.rc != 0
-
-# manage (connects to vbmc)
-
-- name: manage baremetal node
-  shell: "{{ openrc_admin }} && openstack baremetal node manage {{ nodename }} --wait"
-#
-# provide (goes through clean)
-#
-- name: manage baremetal node
-  shell: "{{ openrc_admin }} && openstack baremetal node provide {{ nodename }}"
-
-#- name: boot node
-#  shell: "{{ openrc_admin }} && openstack server create --image cirros-0.4.0-x86_64-uec --flavor baremetal --nic net-id=$(openstack network show tenant-net -f value -c id) instance1"
