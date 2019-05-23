@@ -193,10 +193,6 @@
   command: brctl addif br-eth0 veth0
   become: true
 
-- name: make ovs mgmt bridge
-  command: ovs-vsctl add-bridge br-mgmt
-  become: true
-
 - name: connect veth pair to br-mgmt ovsbridge
   command: ovs-vsctl add-port br-mgmt veth1
   become: true
