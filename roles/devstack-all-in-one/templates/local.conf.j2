@@ -1,6 +1,8 @@
 [[local|localrc]]
 
-enable_plugin networking-ansible https://opendev.org/openstack/networking-ansible
+#enable_plugin networking-ansible https://opendev.org/openstack/networking-ansible
+# (michchap) removeme when gate is unbroken
+enable_plugin networking-ansible https://github.com/michaeltchapman/networking-ansible
 
 enable_plugin ironic https://opendev.org/openstack/ironic
 
@@ -119,11 +121,14 @@ Q_USE_PROVIDERNET_FOR_PUBLIC=False
 min_compute_nodes = 1
 
 [[post-config|/$Q_PLUGIN_CONF_FILE]]
+[ovs]
+bridge_mappings = provisioning:br-prov,mgmt:br-mgmt
+[[post-config|/$Q_PLUGIN_CONF_FILE]]
 [ml2_type_vlan]
 network_vlan_ranges = tenant:500:525,provisioning:1:2
 [[post-config|/$Q_PLUGIN_CONF_FILE]]
 [ml2_type_flat]
-flat_networks = datacentre
+flat_networks = mgmt
 [[post-config|/$Q_PLUGIN_CONF_FILE]]
 [ml2]
 mechanism_drivers = openvswitch,ansible

@@ -193,8 +193,12 @@
   command: brctl addif br-eth0 veth0
   become: true
 
-- name: connect veth pair to br-prov ovsbridge
-  command: ovs-vsctl add-port br-prov veth1
+- name: make ovs mgmt bridge
+  command: ovs-vsctl add-bridge br-mgmt
+  become: true
+
+- name: connect veth pair to br-mgmt ovsbridge
+  command: ovs-vsctl add-port br-mgmt veth1
   become: true
 
 - name: install crudini
@@ -226,3 +230,21 @@
 
 #- name: boot server
 #  shell: "{{ openrc_admin }} && openstack server create --image cirros-0.4.0-x86_64-uec --flavor baremetal --nic net-id=$(openstack network show tenant-net -f value -c id) instance1"
+
+- name: find mgmt network
+  shell:  "{{ openrc_admin }} && openstack network list | grep mgmt"
+  ignore_errors: true
+  register: mgmt_network
+
+- name: create mgmt network
+  shell: "{{ openrc_admin }}  && openstack network create --external --share --provider-network-type flat --provider-physical-network mgmt mgmt"
+  when: mgmt_network.rc != 0
+
+- name: find mgmt subnet
+  shell: "{{ openrc_admin }}  && openstack subnet list | grep provisioning"
+  ignore_errors: true
+  register: mgmt_subnet
+
+- name: create mgmt subnet
+  shell: "{{ openrc_admin }}  && openstack subnet create --network mgmt --subnet-range 192.168.121.0/24 --gateway 192.168.121.1 --allocation-pool start=192.168.121.240,end=192.168.121.245 --no-dhcp mgmt-subnet"
+  when: mgmt_subnet.rc != 0
