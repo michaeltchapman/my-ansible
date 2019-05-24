@@ -118,7 +118,7 @@
   become: true
 
 - name: make ovs mgmt bridge
-  command: ovs-vsctl add-bridge br-mgmt
+  command: ovs-vsctl add-br br-mgmt
   become: true
 
 - name: stack the stack
