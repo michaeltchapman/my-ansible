@@ -22,17 +22,6 @@
 - set_fact:
     controller_host_ip: "{{ hostvars.controller.ansible_default_ipv4.address }}"
 
-- name: create iface-to-bridge script
-  template:
-    src: setifacetobridge.sh.j2
-    dest: "/root/setifacetobridge.sh"
-    mode: 0774
-  become: true
-
-- name: move eth0 to br-eth0
-  shell: "bash -x /root/setifacetobridge.sh"
-  become: true
-
 - name: install arp-scan
   yum:
     name: arp-scan
@@ -115,10 +104,6 @@
   service:
     name: openvswitch
     state: started
-  become: true
-
-- name: make ovs mgmt bridge
-  command: ovs-vsctl add-br br-mgmt
   become: true
 
 - name: stack the stack
